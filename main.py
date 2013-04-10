@@ -109,34 +109,14 @@ def write_result_sheet(result_list, sheet):
             #准备生成条形码字符串
             total_barcode_num = len(result_list[i-1]["bar_code"])
             for x in range(0, total_barcode_num):
-                if x < (total_barcode_num - 1) and x%2 != 0:
-                    #不是最后一个条形码但是一行的结束
-                    s_bc_str = "%s-%d\n" % (
-                        result_list[i-1]["bar_code"][x]["bar_code"],
-                        result_list[i-1]["bar_code"][x]["order_quantity"]
-                    )
-                    space_num = 0
-                elif x < (total_barcode_num - 1) and  x%2 == 0:
-                    #不是最后一个条形码也不是一行的结束
-                    s_bc_str = "%s,%d" % (
-                        result_list[i-1]["bar_code"][x]["bar_code"],
-                        result_list[i-1]["bar_code"][x]["order_quantity"]
-                    )
-                    n_bc_str = "%s,%d\n" % (
-                        result_list[i-1]["bar_code"][x+1]["bar_code"],
-                        result_list[i-1]["bar_code"][x+1]["order_quantity"]
-                    )
-                    space_num = LINE_COUNT - len(s_bc_str) - len(n_bc_str)
-                elif x >= (total_barcode_num - 1):
-                    #是最后一个条形码且是一行的结束
-                    #是最后一个条形码但不是一行的结束
-                    s_bc_str = "%s,%d" % (
-                        result_list[i-1]["bar_code"][x]["bar_code"],
-                        result_list[i-1]["bar_code"][x]["order_quantity"]
-                    )
-                    space_num = 0
+                s_bc_str = "%s-%d" % (
+                    result_list[i-1]["bar_code"][x]["bar_code"],
+                    result_list[i-1]["bar_code"][x]["order_quantity"]
+                )
+                s_bc_str += (26 - len(s_bc_str)) * " "
+                if x%2 != 0 and x < (total_barcode_num - 1):
+                    s_bc_str += '\n'
                 t_bc += s_bc_str
-                t_bc += (space_num * ' ')
             sheet.write(i, 1, t_bc)
             sheet.write(i, 2, str(total_weight))
             sheet.write(i, 3, result_list[i-1]["consignee_name"])
