@@ -20,6 +20,35 @@ SHEET_HEADER = (
     u"寄件人电话",
     u"寄件人邮编",
 )
+
+template_file_header = (
+    u"寄件人姓名",
+    u"寄件人联系方式",
+    u"寄件人地址",
+    u"收件人姓名",
+    u"收件人联系方式",
+    u"收件人地址",
+    u"配货单号",
+    u"收件人联系方式（2）",
+    u"收件人邮编",
+    u"收件人公司",
+    u"到件省/直辖市",
+    u"到件城市",
+    u"到件县/区",
+    u"物品重量",
+    u"物品长度",
+    u"打单时间",
+    u"备注",
+    u"业务类型",
+    u"内件信息",
+    u"留白一",
+    u"留白二",
+    u"寄件人邮编",
+    u"收件人应付邮资",
+    u"收件人应付邮资（大写）",
+    u"保价金额",
+    u"寄件人公司",
+)
 def main(filename):
     result_list = []
     try:
@@ -57,7 +86,7 @@ def main(filename):
                 result_list.append(new_item)
         wbk = xlwt.Workbook()
         sheet = wbk.add_sheet(u"Sheet1")
-        write_result_sheet(result_list, sheet)
+        write_result_sheet_to_template_file(result_list, sheet)
         import time
         dst_file_name = time.strftime('result-%Y-%m-%d-%H-%M-%S.xls', time.localtime(time.time()))
         wbk.save(dst_file_name)
@@ -90,14 +119,14 @@ def find_order_code(order_info, result_list):
         else:
             continue
     return NOT_EXIST_FLAG
-def write_sheet_header(data_sheet):
-    for i in range(0, len(SHEET_HEADER)):
-        data_sheet.write(0, i, SHEET_HEADER[i])
+def write_sheet_header(data_sheet, sheet_header):
+    for i in range(0, len(sheet_header)):
+        data_sheet.write(0, i, sheet_header[i])
 
 def write_result_sheet(result_list, sheet):
     if isinstance(result_list, list):
         nrows = len(result_list)
-        write_sheet_header(sheet)
+        write_sheet_header(sheet, SHEET_HEADER)
         for i in range(1, nrows + 1):
             sheet.write(i, 0, result_list[i-1]["order_code"])
             #t_bc是最后生成的打印条形码字符串
@@ -127,6 +156,43 @@ def write_result_sheet(result_list, sheet):
             sheet.write(i, 8, result_list[i-1]["sender_address"])
             sheet.write(i, 9, result_list[i-1]["sender_phone_number"])
             sheet.write(i, 10, result_list[i-1]["sender_postcode"])
+        return True
+    else:
+        return False
+
+def write_result_sheet_to_template_file(result_list, sheet):
+    if isinstance(result_list, list):
+        nrows = len(result_list)
+        write_sheet_header(sheet, template_file_header)
+        for i in range(1, nrows + 1):
+            sheet.write(i, 6, result_list[i-1]["order_code"])
+            #t_bc是最后生成的打印条形码字符串
+            t_bc = ""
+            #求总重量
+            total_weight = 0.0
+            for bc in result_list[i-1]["bar_code"]:
+                total_weight += float(bc["order_quantity"]) * float(bc["order_weight"])
+                #准备生成条形码字符串
+            total_barcode_num = len(result_list[i-1]["bar_code"])
+            for x in range(0, total_barcode_num):
+                s_bc_str = "%s-%d" % (
+                    result_list[i-1]["bar_code"][x]["bar_code"],
+                    result_list[i-1]["bar_code"][x]["order_quantity"]
+                )
+                s_bc_str += (26 - len(s_bc_str)) * " "
+                if x%2 != 0 and x < (total_barcode_num - 1):
+                    s_bc_str += '\n'
+                t_bc += s_bc_str
+            sheet.write(i, 18, t_bc)
+            sheet.write(i, 13, str(total_weight))
+            sheet.write(i, 3, result_list[i-1]["consignee_name"])
+            sheet.write(i, 4, result_list[i-1]["consignee_phone_number"])
+            sheet.write(i, 5, result_list[i-1]["consignee_address"])
+            sheet.write(i, 8, result_list[i-1]["consignee_postcode"])
+            sheet.write(i, 0, result_list[i-1]["sender_name"])
+            sheet.write(i, 2, result_list[i-1]["sender_address"])
+            sheet.write(i, 1, result_list[i-1]["sender_phone_number"])
+            sheet.write(i, 21, result_list[i-1]["sender_postcode"])
         return True
     else:
         return False
