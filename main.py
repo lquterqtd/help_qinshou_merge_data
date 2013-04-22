@@ -1,53 +1,53 @@
 __author__ = 'Administrator'
-#coding:cp936
+#coding:utf-8
 import xlrd
 import xlwt
-SRC_FILE_NAME = u"Êı¾İ.xlsx"
+SRC_FILE_NAME = u"æ•°æ®.xlsx"
 DST_FILE_NAME = u"result.xls"
 EXIST_FLAG = 0
 NOT_EXIST_FLAG = 1
 LINE_COUNT = 53
 SHEET_HEADER = (
-    u"¶©µ¥±àÂë",
-    u"ÌõĞÎÂë",
-    u"ÖØÁ¿",
-    u"ÊÕ»õÈË",
-    u"ÊÕ»õÊÖ»ú",
-    u"µØÖ·",
-    u"ÓÊ±à",
-    u"¼Ä¼şÈËĞÕÃû",
-    u"¼Ä¼şÈËµØÖ·",
-    u"¼Ä¼şÈËµç»°",
-    u"¼Ä¼şÈËÓÊ±à",
+    u"è®¢å•ç¼–ç ",
+    u"æ¡å½¢ç ",
+    u"é‡é‡",
+    u"æ”¶è´§äºº",
+    u"æ”¶è´§æ‰‹æœº",
+    u"åœ°å€",
+    u"é‚®ç¼–",
+    u"å¯„ä»¶äººå§“å",
+    u"å¯„ä»¶äººåœ°å€",
+    u"å¯„ä»¶äººç”µè¯",
+    u"å¯„ä»¶äººé‚®ç¼–",
 )
 
 template_file_header = (
-    u"¼Ä¼şÈËĞÕÃû",
-    u"¼Ä¼şÈËÁªÏµ·½Ê½",
-    u"¼Ä¼şÈËµØÖ·",
-    u"ÊÕ¼şÈËĞÕÃû",
-    u"ÊÕ¼şÈËÁªÏµ·½Ê½",
-    u"ÊÕ¼şÈËµØÖ·",
-    u"Åä»õµ¥ºÅ",
-    u"ÊÕ¼şÈËÁªÏµ·½Ê½£¨2£©",
-    u"ÊÕ¼şÈËÓÊ±à",
-    u"ÊÕ¼şÈË¹«Ë¾",
-    u"µ½¼şÊ¡/Ö±Ï½ÊĞ",
-    u"µ½¼ş³ÇÊĞ",
-    u"µ½¼şÏØ/Çø",
-    u"ÎïÆ·ÖØÁ¿",
-    u"ÎïÆ·³¤¶È",
-    u"´òµ¥Ê±¼ä",
-    u"±¸×¢",
-    u"ÒµÎñÀàĞÍ",
-    u"ÄÚ¼şĞÅÏ¢",
-    u"Áô°×Ò»",
-    u"Áô°×¶ş",
-    u"¼Ä¼şÈËÓÊ±à",
-    u"ÊÕ¼şÈËÓ¦¸¶ÓÊ×Ê",
-    u"ÊÕ¼şÈËÓ¦¸¶ÓÊ×Ê£¨´óĞ´£©",
-    u"±£¼Û½ğ¶î",
-    u"¼Ä¼şÈË¹«Ë¾",
+    u"å¯„ä»¶äººå§“å",
+    u"å¯„ä»¶äººè”ç³»æ–¹å¼",
+    u"å¯„ä»¶äººåœ°å€",
+    u"æ”¶ä»¶äººå§“å",
+    u"æ”¶ä»¶äººè”ç³»æ–¹å¼",
+    u"æ”¶ä»¶äººåœ°å€",
+    u"é…è´§å•å·",
+    u"æ”¶ä»¶äººè”ç³»æ–¹å¼ï¼ˆ2ï¼‰",
+    u"æ”¶ä»¶äººé‚®ç¼–",
+    u"æ”¶ä»¶äººå…¬å¸",
+    u"åˆ°ä»¶çœ/ç›´è¾–å¸‚",
+    u"åˆ°ä»¶åŸå¸‚",
+    u"åˆ°ä»¶å¿/åŒº",
+    u"ç‰©å“é‡é‡",
+    u"ç‰©å“é•¿åº¦",
+    u"æ‰“å•æ—¶é—´",
+    u"å¤‡æ³¨",
+    u"ä¸šåŠ¡ç±»å‹",
+    u"å†…ä»¶ä¿¡æ¯",
+    u"ç•™ç™½ä¸€",
+    u"ç•™ç™½äºŒ",
+    u"å¯„ä»¶äººé‚®ç¼–",
+    u"æ”¶ä»¶äººåº”ä»˜é‚®èµ„",
+    u"æ”¶ä»¶äººåº”ä»˜é‚®èµ„ï¼ˆå¤§å†™ï¼‰",
+    u"ä¿ä»·é‡‘é¢",
+    u"å¯„ä»¶äººå…¬å¸",
 )
 def main(filename):
     result_list = []
@@ -55,7 +55,7 @@ def main(filename):
         work_book = xlrd.open_workbook(SRC_FILE_NAME)
         data_sheet = work_book.sheet_by_name(u'Sheet1')
     except:
-        print "´ò¿ªÎÄ¼şÊ§°Ü£¬¿ÉÄÜÊÇÎÄ¼şÒÑ¾­±»´ò¿ª»òÕß²»´æÔÚ"
+        print "æ‰“å¼€æ–‡ä»¶å¤±è´¥ï¼Œå¯èƒ½æ˜¯æ–‡ä»¶å·²ç»è¢«æ‰“å¼€æˆ–è€…ä¸å­˜åœ¨"
         return False
     else:
         nrows = data_sheet.nrows
@@ -90,7 +90,7 @@ def main(filename):
         import time
         dst_file_name = time.strftime('result-%Y-%m-%d-%H-%M-%S.xls', time.localtime(time.time()))
         wbk.save(dst_file_name)
-        print "Éú³É½á¹û±£´æÔÚ%sÖĞ" % dst_file_name
+        print "ç”Ÿæˆç»“æœä¿å­˜åœ¨%sä¸­" % dst_file_name
         return True
 
 def find_order_code(order_info, result_list):
@@ -129,13 +129,13 @@ def write_result_sheet(result_list, sheet):
         write_sheet_header(sheet, SHEET_HEADER)
         for i in range(1, nrows + 1):
             sheet.write(i, 0, result_list[i-1]["order_code"])
-            #t_bcÊÇ×îºóÉú³ÉµÄ´òÓ¡ÌõĞÎÂë×Ö·û´®
+            #t_bcæ˜¯æœ€åç”Ÿæˆçš„æ‰“å°æ¡å½¢ç å­—ç¬¦ä¸²
             t_bc = ""
-            #Çó×ÜÖØÁ¿
+            #æ±‚æ€»é‡é‡
             total_weight = 0.0
             for bc in result_list[i-1]["bar_code"]:
                 total_weight += float(bc["order_quantity"]) * float(bc["order_weight"])
-            #×¼±¸Éú³ÉÌõĞÎÂë×Ö·û´®
+            #å‡†å¤‡ç”Ÿæˆæ¡å½¢ç å­—ç¬¦ä¸²
             total_barcode_num = len(result_list[i-1]["bar_code"])
             for x in range(0, total_barcode_num):
                 s_bc_str = "%s-%d" % (
@@ -166,13 +166,13 @@ def write_result_sheet_to_template_file(result_list, sheet):
         write_sheet_header(sheet, template_file_header)
         for i in range(1, nrows + 1):
             sheet.write(i, 6, result_list[i-1]["order_code"])
-            #t_bcÊÇ×îºóÉú³ÉµÄ´òÓ¡ÌõĞÎÂë×Ö·û´®
+            #t_bcæ˜¯æœ€åç”Ÿæˆçš„æ‰“å°æ¡å½¢ç å­—ç¬¦ä¸²
             t_bc = ""
-            #Çó×ÜÖØÁ¿
+            #æ±‚æ€»é‡é‡
             total_weight = 0.0
             for bc in result_list[i-1]["bar_code"]:
                 total_weight += float(bc["order_quantity"]) * float(bc["order_weight"])
-                #×¼±¸Éú³ÉÌõĞÎÂë×Ö·û´®
+                #å‡†å¤‡ç”Ÿæˆæ¡å½¢ç å­—ç¬¦ä¸²
             total_barcode_num = len(result_list[i-1]["bar_code"])
             for x in range(0, total_barcode_num):
                 s_bc_str = "%s-%d" % (
@@ -188,6 +188,7 @@ def write_result_sheet_to_template_file(result_list, sheet):
             sheet.write(i, 3, result_list[i-1]["consignee_name"])
             sheet.write(i, 4, result_list[i-1]["consignee_phone_number"])
             sheet.write(i, 5, result_list[i-1]["consignee_address"])
+            parse_address(result_list[i-1]["consignee_address"])
             sheet.write(i, 8, result_list[i-1]["consignee_postcode"])
             sheet.write(i, 0, result_list[i-1]["sender_name"])
             sheet.write(i, 2, result_list[i-1]["sender_address"])
@@ -196,7 +197,38 @@ def write_result_sheet_to_template_file(result_list, sheet):
         return True
     else:
         return False
+def parse_address(address):
+    address = address.replace('/', ' ')
+    digits = ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')
+    for digit in digits:
+        address = address.replace(digit, '')
+    province_index = address.find(u'çœ')
+    city_index = address.find(u'å¸‚')
+    region_index = address.find(u'åŒº')
+    county_index = address.find(u'å¿')
+    autonomous_region_index = address.find(u'è‡ªæ²»åŒº')
+    if -1 == province_index:
+        #æ‰¾ä¸åˆ°çœè¯´æ˜æ˜¯ç›´è¾–å¸‚æˆ–è€…æ˜¯è‡ªæ²»åŒº
+        #å…ˆåŒ¹é…è‡ªæ²»åŒº:
+        if -1 != autonomous_region_index:
+            print address[0:autonomous_region_index].strip() + u'è‡ªæ²»åŒº',
+        else:
+            #æ­¤ç§æƒ…å†µä¸ºç›´è¾–å¸‚
+            print address[0:city_index].strip(),
+        pass
+    elif province_index > 3:
+        #è¯´æ˜çœå‰é¢çš„å­—ç¬¦æ•°å¤§äº3ï¼Œè¿™ä¸ªåŒ¹é…å¯èƒ½ä¼šæœ‰é—®é¢˜
+        print address + u'å¯èƒ½æœ‰é—®é¢˜',
+    else:
+        #èƒ½åŒ¹é…åˆ°çœ,é‚£ä¹ˆæ¥ç€åŒ¹é…å¸‚å’ŒåŒºï¼ˆå¿ï¼‰
+        print address[0:province_index].strip(),
+        print address[province_index + 1:city_index],
+        if -1 == region_index:
+            print address[city_index + 1:county_index],
+        if -1 == county_index:
+            print address[city_index + 1:region_index],
+    print
 if __name__ == '__main__':
     while True:
-        filename = raw_input("ÇëÊäÈëÎÄ¼şÃû:")
+        filename = raw_input("è¯·è¾“å…¥æ–‡ä»¶å:")
         main(filename)
