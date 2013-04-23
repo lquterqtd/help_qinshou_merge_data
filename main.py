@@ -49,10 +49,48 @@ template_file_header = (
     u"保价金额",
     u"寄件人公司",
 )
+
+province_match_list = (
+    u"山东",
+    u"江苏",
+    u"安徽",
+    u"浙江",
+    u"福建",
+    u"上海",
+    u"广东",
+    u"广西",
+    u"海南",
+    u"湖北",
+    u"湖南",
+    u"河南",
+    u"江西",
+    u"北京",
+    u"天津",
+    u"河北",
+    u"山西",
+    u"内蒙古",
+    u"宁夏",
+    u"新疆",
+    u"青海",
+    u"陕西",
+    u"甘肃",
+    u"四川",
+    u"云南",
+    u"贵州",
+    u"西藏",
+    u"重庆",
+    u"辽宁",
+    u"吉林",
+    u"黑龙江",
+    u"台湾",
+    u"香港",
+    u"澳门",
+)
+
 def main(filename):
     result_list = []
     try:
-        work_book = xlrd.open_workbook(SRC_FILE_NAME)
+        work_book = xlrd.open_workbook(filename)
         data_sheet = work_book.sheet_by_name(u'Sheet1')
     except:
         print "打开文件失败，可能是文件已经被打开或者不存在"
@@ -188,7 +226,11 @@ def write_result_sheet_to_template_file(result_list, sheet):
             sheet.write(i, 3, result_list[i-1]["consignee_name"])
             sheet.write(i, 4, result_list[i-1]["consignee_phone_number"])
             sheet.write(i, 5, result_list[i-1]["consignee_address"])
-            parse_address(result_list[i-1]["consignee_address"])
+            parse_res = parse_address(result_list[i-1]["consignee_address"])
+            sheet.write(i, 10, parse_res[0])
+            sheet.write(i, 11, parse_res[1])
+            sheet.write(i, 12, parse_res[2])
+
             sheet.write(i, 8, result_list[i-1]["consignee_postcode"])
             sheet.write(i, 0, result_list[i-1]["sender_name"])
             sheet.write(i, 2, result_list[i-1]["sender_address"])
@@ -202,32 +244,30 @@ def parse_address(address):
     digits = ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')
     for digit in digits:
         address = address.replace(digit, '')
-    province_index = address.find(u'省')
-    city_index = address.find(u'市')
-    region_index = address.find(u'区')
-    county_index = address.find(u'县')
-    autonomous_region_index = address.find(u'自治区')
-    if -1 == province_index:
-        #找不到省说明是直辖市或者是自治区
-        #先匹配自治区:
-        if -1 != autonomous_region_index:
-            print address[0:autonomous_region_index].strip() + u'自治区',
+    symbol = ('(', ')')
+    for sym in symbol:
+        address = address.replace(sym, '')
+    address = address.strip()
+    address = address.split(' ')
+
+    f_addr = []
+    for i in address:
+        f_addr.append(i.strip())
+
+    s_index = []
+    match_list = (u'市', u'县', u'区', u'镇')
+    for m in match_list:
+        s_index.append(f_addr[2].find(m))
+    s_index.sort()
+    for i in s_index:
+        if i == -1:
+            continue
         else:
-            #此种情况为直辖市
-            print address[0:city_index].strip(),
-        pass
-    elif province_index > 3:
-        #说明省前面的字符数大于3，这个匹配可能会有问题
-        print address + u'可能有问题',
-    else:
-        #能匹配到省,那么接着匹配市和区（县）
-        print address[0:province_index].strip(),
-        print address[province_index + 1:city_index],
-        if -1 == region_index:
-            print address[city_index + 1:county_index],
-        if -1 == county_index:
-            print address[city_index + 1:region_index],
-    print
+            f_addr[2] = f_addr[2][0:i + 1]
+            break
+    #print f_addr[0],f_addr[1],f_addr[2]
+    return f_addr
+
 if __name__ == '__main__':
     while True:
         filename = raw_input("请输入文件名:")
