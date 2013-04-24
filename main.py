@@ -226,10 +226,14 @@ def write_result_sheet_to_template_file(result_list, sheet):
             sheet.write(i, 3, result_list[i-1]["consignee_name"])
             sheet.write(i, 4, result_list[i-1]["consignee_phone_number"])
             sheet.write(i, 5, result_list[i-1]["consignee_address"])
-            parse_res = parse_address(result_list[i-1]["consignee_address"])
-            sheet.write(i, 10, parse_res[0])
-            sheet.write(i, 11, parse_res[1])
-            sheet.write(i, 12, parse_res[2])
+            try:
+                parse_res = parse_address(result_list[i-1]["consignee_address"])
+            except:
+                print u"第%d行出现了解析异常，请检查" % (i + 1)
+            else:
+                sheet.write(i, 10, parse_res[0])
+                sheet.write(i, 11, parse_res[1])
+                sheet.write(i, 12, parse_res[2])
 
             sheet.write(i, 8, result_list[i-1]["consignee_postcode"])
             sheet.write(i, 0, result_list[i-1]["sender_name"])
